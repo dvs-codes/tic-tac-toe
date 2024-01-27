@@ -1,0 +1,26 @@
+body {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.game-board {
+    display: flex;
+    background-color: antiquewhite;
+    flex-wrap: wrap;
+    width: 600px;
+}
+
+button {
+    width:200px;
+    height: 200px;
+    background-color: rgb(226, 219, 210);
+    border: 1px solid black;
+    font-size: 100px;
+    transition: all .3s;
+}
+
+button:hover {
+    background-color: rgb(88, 83, 76);
+}
