@@ -1,73 +1,74 @@
-let board = [
-     , , ,
-     , , ,
-     , , ,
-]
+(function() {
+    var game = {
+        board:  [, , , , , , , , ,],
 
+        x: 'x',
+        item: 'o',
+        lastTurn :'',
+        init: function() {
+            this.cacheDom()
+            this.bindEvents()
+            this.addBox()
+        },
+        cacheDom: function() {
+            this.gameBoard = document.querySelector('.game-board')   
+        },
+        round: function(item, position) {
 
-let x = 'x'
-let o = 'o'
-let lastTurn =''
+            this.board.splice(position,1,item)
+            if (
+                //rows
+                this.board[0] === item && this.board[1] === item && this.board[2] === item || 
+                this.board[3] === item && this.board[4] === item && this.board[5] === item ||
+                this.board[6] === item && this.board[7] === item && this.board[8] === item ||
+            
+                //columns
+                this.board[0] === item && this.board[3] === item && this.board[6] === item ||
+                this.board[1] === item && this.board[4] === item && this.board[7] === item ||
+                this.board[2] === item && this.board[5] === item && this.board[8] === item ||
 
-let gameBoard = document.querySelector('.game-board')
+                //diag
+                this.board[0] === item && this.board[4] === item && this.board[8] === item ||
+                this.board[2] === item && this.board[4] === item && this.board[6] === item  
+            ) {
+                alert(`${item} wins`)
+            } 
 
-for (i=0; i<9 ;i++) {
-    let gridBox = document.createElement('button')
-    gridBox.classList.add(`${i}`)
-    gameBoard.appendChild(gridBox)
-
-    gridBox.addEventListener(('click'), () => {
-        //first turn is always x
-        let indexOfBox = gridBox.className; 
-
-        if (lastTurn ==='' || lastTurn === o) {
-            round(x,indexOfBox)  
-            gridBox.innerText = board[indexOfBox]
-            lastTurn = x  
-        } else {
-            round(o,indexOfBox)  
-            gridBox.innerText = board[indexOfBox]
-            lastTurn = o     
-        }
-    })
-
-}
-
-
-
-function round(item, position) {
-    board.splice(position,1,item)
-    console.log(board)
-    if (
-        //rows
-        board[0] === o && board[1] === o && board[2] === o || 
-        board[3] === o && board[4] === o && board[5] === o ||
-        board[6] === o && board[7] === o && board[8] === o ||
-
-        //columns
-        board[0] === o && board[3] === o && board[6] === o ||
-        board[1] === o && board[4] === o && board[7] === o ||
-        board[2] === o && board[5] === o && board[8] === o ||
-
-        //diag
-        board[0] === o && board[4] === o && board[8] === o ||
-        board[2] === o && board[4] === o && board[6] === o  
-    ) {
-        console.log(" o win")
-    } else if (
+        },
+        bindEvents: function() {
+            for (i=0; i<9 ;i++) {
+                let gridBox = document.createElement('button')
+                gridBox.classList.add(`${i}`)
+                this.gameBoard.appendChild(gridBox)
+            
+                gridBox.addEventListener(('click'), () => {
+                    //first turn is always x
+                    let indexOfBox = gridBox.className; 
+            
+                    if (this.lastTurn ==='' || this.lastTurn === this.item) {
+                        this.round(this.x,indexOfBox)  
+                        gridBox.innerText = this.board[indexOfBox]
+                        this.lastTurn = this.x  
+                    } else {
+                        this.round(this.item,indexOfBox)  
+                        gridBox.innerText = this.board[indexOfBox]
+                        this.lastTurn = this.item     
+                    }
+                })
+            
+            }
         
-        //rows
-        board[0] === x && board[1] === x && board[2] === x || 
-        board[3] === x && board[4] === x && board[5] === x ||
-        board[6] === x && board[7] === x && board[8] === x ||
-        //column
-        board[0] === x && board[3] === x && board[6] === x ||
-        board[1] === x && board[4] === x && board[7] === x ||
-        board[2] === x && board[5] === x && board[8] === x ||
-        //dia
-        board[0] === x && board[4] === x && board[8] === x ||
-        board[2] === x && board[4] === x && board[6] === x  
-    ) {
-        console.log( "x win")
+        },
+        render: function() {
+
+        },
+        addBox: function() {},
+
     }
-} 
+    game.init();
+
+})()
+
+
+
+
