@@ -1,80 +1,93 @@
-(function() {
-    var game = {
-        board:  [, , , , , , , , ,],
 
-        x: 'x',
-        o: 'o',
-        lastTurn :'',
-        init: function() {
-            this.cacheDom()
-            this.bindEvents()
-        },
-        cacheDom: function() {
-            this.gameBoard = document.querySelector('.game-board')  
-            this.resetButton = document.querySelector('.reset')  
-        },
-        round: function(item, position) {
+let board = [ , , , , , , , , ,]
 
-            this.board.splice(position,1,item)
-            if (
-                //rows
-                this.board[0] === item && this.board[1] === item && this.board[2] === item || 
-                this.board[3] === item && this.board[4] === item && this.board[5] === item ||
-                this.board[6] === item && this.board[7] === item && this.board[8] === item ||
-            
-                //columns
-                this.board[0] === item && this.board[3] === item && this.board[6] === item ||
-                this.board[1] === item && this.board[4] === item && this.board[7] === item ||
-                this.board[2] === item && this.board[5] === item && this.board[8] === item ||
+let boxes = []
 
-                //diag
-                this.board[0] === item && this.board[4] === item && this.board[8] === item ||
-                this.board[2] === item && this.board[4] === item && this.board[6] === item  
-            ) {
-                alert(`${item} wins`)
-            } 
+let mark = "";
 
-        },
+let gameBoard = document.querySelector('.game-board')
+let resetButton = document.querySelector('.reset')
+let playerX = document.querySelector('.player-x')
+let playerO = document.querySelector('.player-o')
+let message = document.querySelector('.message')
+let declaration = document.querySelector('.declaration')
 
-        addBox: function() {
+playerX.addEventListener('click', () => {
+    mark = 'x'
+    message.innerText = 'Player X turn'
+})
 
-            //first turn is always x
-            let indexOfBox = gridBox.className; 
-  
-            if (this.lastTurn ==='' || this.lastTurn === this.o) {
-                this.round(this.x,indexOfBox)  
-                gridBox.innerText = this.board[indexOfBox]
-                this.lastTurn = this.x  
-            } else {
-                this.round(this.o,indexOfBox)  
-                gridBox.innerText = this.board[indexOfBox]
-                this.lastTurn = this.o    
-            }
-        
-        },
+playerO.addEventListener('click', () => {
+    mark = 'o'
+    message.innerText = 'Player O turn'
+})
 
-        bindEvents: function() {
-            let gridBoxes =[]
-            
-            for (i=0; i<9 ;i++) {
-                let gridBox = document.createElement('button')
-                gridBox.classList.add(`${i}`)
-                this.gameBoard.appendChild(gridBox)
-                gridBoxes.push(gridBox)
-            
-                gridBox.addEventListener(('click'), this.addBox)
-            
-            }
-            this.resetButton.addEventListener(('click'), ()=> {
-                this.board = [, , , , , , , , ,]
-                for (i=0; i<9; i++) {
-                    gridBoxes[i].innerText = ''
-                }
-            })
-            
-        }
+resetButton.addEventListener('click', erase)
 
+for (i=0; i<9 ;i++) {
+   let gridBox = document.createElement('button')
+   gridBox.classList.add(`${i}`)
+   gameBoard.appendChild(gridBox)
+   boxes.push(gridBox)
+
+   gridBox.addEventListener(('click'), marker)
+
+   function marker(event) {
+    resetButton.innerText = 'restart'
+    if(!mark) {
+        alert('please select the player')
+    } else if (event.target.innerText) {
+        alert('box is already marked')
+    } else if (declaration.innerText) {
+        alert('game is over boy')
     }
-    game.init();
+    else {
+        event.target.innerText = mark
+        round(mark,event.target.className)
 
-})()
+        //flips the marker
+        if( mark==='x') { 
+            mark ='o'
+            message.innerText = `Player O's turn`
+        } 
+        else {
+            mark ='x'
+            message.innerText = `Player X's turn`
+        }
+    }
+}
+}
+
+function erase() {
+    board = [ , , , , , , , , ,]
+    for(i=0; i<9; i++) {
+        boxes[i].innerText = ''
+        mark = ''
+    }
+    message.innerText = "Please select a player before starting !"
+    declaration.innerText = ''
+}
+
+function round(item, position) {
+   board.splice(position,1,item)
+   console.log(board)
+   if (
+       //rows
+       board[0] === item && board[1] === item && board[2] === item || 
+       board[3] === item && board[4] === item && board[5] === item ||
+       board[6] === item && board[7] === item && board[8] === item ||
+
+       //columns
+       board[0] === item && board[3] === item && board[6] === item ||
+       board[1] === item && board[4] === item && board[7] === item ||
+       board[2] === item && board[5] === item && board[8] === item ||
+
+       //diag
+       board[0] === item && board[4] === item && board[8] === item ||
+       board[2] === item && board[4] === item && board[6] === item  
+   ) {
+       declaration.innerHTML = `${item} Wins, press Restart button`
+       resetButton.innerText = "Restart"
+
+   }
+}
