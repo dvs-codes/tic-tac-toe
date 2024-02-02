@@ -28,7 +28,7 @@
                 this.mark = 'o'
                 this.message.innerText = 'Player O turn'
             })
-            this.resetButton.addEventListener('click', this.erase)
+            this.resetButton.addEventListener('click', this.erase.bind(game))
         },
         erase: function() {
             this.board = [ , , , , , , , , ,]
@@ -38,7 +38,32 @@
             }
             this.message.innerText = "Please select a player before starting !"
             this.declaration.innerText = ''
-            console.log('hi')
+        },
+        marker: function(event) {
+
+            if(!this.mark) {
+                alert('please select the player')
+            } else if (event.target.innerText) {
+                alert('box is already marked')
+            } else if (this.declaration.innerText) {
+                alert('game is over boy')
+            }
+            else {
+                event.target.innerText = this.mark
+                this.round(this.mark,event.target.className)
+                
+                //flips the marker
+                if( this.mark==='x') { 
+                    this.mark ='o'
+                    this.message.innerText = `Player O's turn`
+                } 
+                else {
+                    this.mark ='x'
+                    this.message.innerText = `Player X's turn`
+                }
+                this.resetButton.innerText = 'Restart'
+            }
+        
         },
         addBoxes: function() {
             for (i=0; i<9 ;i++) {
@@ -47,37 +72,11 @@
                 this.gameBoard.appendChild(gridBox)
                 this.boxes.push(gridBox)
              
-                gridBox.addEventListener(('click'), marker.bind(game))
-             
-                function marker(event) {
-                 this.resetButton.innerText = 'restart'
-                 if(!this.mark) {
-                     alert('please select the player')
-                 } else if (event.target.innerText) {
-                     alert('box is already marked')
-                 } else if (this.declaration.innerText) {
-                     alert('game is over boy')
-                 }
-                 else {
-                     event.target.innerText = this.mark
-                     this.round(this.mark,event.target.className)
-             
-                     //flips the marker
-                     if( this.mark==='x') { 
-                         this.mark ='o'
-                         this.message.innerText = `Player O's turn`
-                     } 
-                     else {
-                         this.mark ='x'
-                         this.message.innerText = `Player X's turn`
-                     }
-                 }
-             }
+                gridBox.addEventListener(('click'), this.marker.bind(game))             
              }
         },
         round: function(item, position) {
             this.board.splice(position,1,item)
-            console.log(this.board)
             if (
                 //rows
                 this.board[0] === item && this.board[1] === item && this.board[2] === item || 
@@ -93,7 +92,6 @@
                 this.board[0] === item && this.board[4] === item && this.board[8] === item ||
                 this.board[2] === item && this.board[4] === item && this.board[6] === item  
             ) {
-                this.erase()
                 this.declaration.innerHTML = `${item} Wins, press Restart button`
                 this.resetButton.innerText = "Restart"
             }
